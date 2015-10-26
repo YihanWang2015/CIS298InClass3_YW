@@ -12,6 +12,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 
@@ -20,8 +23,14 @@ public class CrimeFragment extends Fragment {
     //Declare a class leve variable for a crime.
     private Crime mCrime;
 
-
     private EditText mTitleField;
+
+    private Button mDateButton;
+    private CheckBox mSolvedCheckBox;
+
+
+
+
 
     //This method does not do the inflating of the view
     //like the onCreate for an activity does.
@@ -70,9 +79,29 @@ public class CrimeFragment extends Fragment {
         });
 
 
+        //Find the date button.
+        mDateButton = (Button)v.findViewById(R.id.crime_date);
+        //Set the text on the date button to the date from the crime model converted to a string.
+        mDateButton.setText(mCrime.getDate().toString());
+        //Disable the button so it doesn't do anything until we wire it up to do something.
+        mDateButton.setEnabled(false);
+
+        //Get a handle to the CheckBox
+        mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
+        //Set the on Check Changed Listener. CheckBox is a subclass of the CompoundButton Class.
+        //That is why we use that class to setup the new listener.
+        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //Set the solved bool on the model to the result of the check changed event.
+                //Set the crime's solved property
+                mCrime.setSolved(isChecked);
+            }
+        });
+
+
+
         return v;
-
-
 
 
     }
