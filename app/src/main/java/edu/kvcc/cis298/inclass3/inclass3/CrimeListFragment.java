@@ -1,6 +1,7 @@
 package edu.kvcc.cis298.inclass3.inclass3;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,23 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
+    //*************************************************************************
+    //Chap10
+
+    //When this Fragment is resumed from a paused state such as returning to this
+    //fragment hosting activity from some other activity.
+    //Update the UI of the app.
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Update the UI
+        updateUI();
+    }
+
+    //*************************************************************************
+
+
     private void updateUI(){
 
 
@@ -69,12 +87,28 @@ public class CrimeListFragment extends Fragment {
         //Get the actual list of crimes from the CrimeLab class
         List<Crime> crimes = crimeLab.getCrimes();
 
-        //Create a new crimeAdapter and send it over the list of crimes.
-        //Crime adapter needs the list of crimes so that it can work with the RecyclerView to display them.
-        mAdapter = new CrimeAdapter((crimes));
+        //*************************************************************************
+        //Chap 10 changed
 
-        //Take the adapter that we just created, and set it as the adapter that the RecyclerView is going to use.
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        //If the adapter hasn't been created yet, we want to create it and set the Adapter for the Recycler view.
+       if(mAdapter == null) {
+
+           //Create a new crimeAdapter and send it over the list of crimes.
+           //Crime adapter needs the list of crimes so that it can work with the RecyclerView to display them.
+           mAdapter = new CrimeAdapter((crimes));
+
+           //Take the adapter that we just created, and set it as the adapter that the RecyclerView is going to use.
+           mCrimeRecyclerView.setAdapter(mAdapter);
+
+           //Else, the adapter already exists, so we just need to notify
+           //that the data set might have changed. This will
+           //automatically update any data changes for us.
+       }else {
+           mAdapter.notifyDataSetChanged();
+       }
+        //*************************************************************************
+
+
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -112,12 +146,14 @@ public class CrimeListFragment extends Fragment {
             // mTitleTextView = (TextView)itemView;
             //*****************************************
 
-            //Do assignment to class level vars. User the findviewbyid
+            //Do assignment to class level vars. User the findViewById
             //method to get access to the various controls we want to do work with.
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_crime_title_text_view);
             mDateTextView = (TextView) itemView.findViewById(R.id.list_item_crime_date_text_view);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
+
+            /*mSolvedCheckBox.setEnabled(false);*/
         }
 
            //Method to take in a instance of a crime, and assign it to the class level version.
@@ -134,13 +170,23 @@ public class CrimeListFragment extends Fragment {
         }
 
         //This method must be implemented because we have this class
-        //implementing the onclicklistener interface. this method will do the work
+        //implementing the onclickListener interface. this method will do the work
         //toasting the title of the crime that was clicked on.
         @Override
         public void onClick(View v){
-            Toast.makeText(getActivity(),
+           /* Toast.makeText(getActivity(),
                     mCrime.getTitle() + "clicked!", Toast.LENGTH_SHORT)
-                    .show();
+                    .show();*/
+    //**********************************************************************************
+           // Intent intent = new Intent(getActivity(), CrimeActivity.class);
+
+            //Ask CrimeActivity for an intent that will get the CrimeActivity Started.
+            //The method requires us to pass the Context, which we can get from calling getActivity(),
+            //and the id of the crime we want to start the activity with.
+            //Once we have the intent, we call startActivity to start it.
+            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);
+    //**********************************************************************************
         }
 
     }
