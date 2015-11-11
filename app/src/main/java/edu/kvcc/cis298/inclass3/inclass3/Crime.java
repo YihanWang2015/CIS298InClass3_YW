@@ -25,6 +25,19 @@ public class Crime {
         mDate = new Date();
     }
 
+
+    //CSV -> **************************************
+    //4 parameter constructor to make a new Crime
+    public Crime(UUID uuid, String title, Date date, boolean isSolved){
+        mId= uuid;
+        mTitle = title;
+        mDate = date;
+        mSolved = isSolved;
+    }
+
+    //CSV <- **************************************
+
+
     //Getters and Setters
 
     //Only need to get the UUID, no need to set it, so no setter here

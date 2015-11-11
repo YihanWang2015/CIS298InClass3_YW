@@ -17,6 +17,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -151,8 +154,18 @@ public class CrimeFragment extends Fragment {
 
         //Find the date button.
         mDateButton = (Button)v.findViewById(R.id.crime_date);
+
+        //CSV ->**********************
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+
         //Set the text on the date button to the date from the crime model converted to a string.
-        mDateButton.setText(mCrime.getDate().toString());
+        mDateButton.setText(df.format(mCrime.getDate()));
+
+
+        //CSV <- *****************************
+
+
+
         //Disable the button so it doesn't do anything until we wire it up to do something.
         mDateButton.setEnabled(false);
 
